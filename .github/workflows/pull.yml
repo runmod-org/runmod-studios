@@ -1,0 +1,19 @@
+name: Pull footage
+on: [push, workflow_dispatch]
+permissions:
+  contents: write
+jobs:
+  pull:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download from Drive
+        run: |
+          pip install -q gdown
+          gdown 1NN-78tBzYsYlimNR3V_yUlBwY5MYF00K -O A.mp4
+          gdown 1eFj79_86lJStoa3uRdAEqtTCLR3OHnsQ -O B.mp4
+          gdown 1L-UzqhV4HK2tlxoaDUW4_HJdi2VHNX8R -O C.mp4
+          ls -l *.mp4
+      - name: Attach to a release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create raw-footage A.mp4 B.mp4 C.mp4 -R ${{ github.repository }} --title "raw footage" --notes "temp"
